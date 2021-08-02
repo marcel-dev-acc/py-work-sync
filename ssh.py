@@ -17,17 +17,17 @@ class SSHHandler:
         
         # Validate incoming environment variables
         hostname = os.environ.get("HOSTNAME")
-        # if not hostname:
-        #     raise ValueError("Define HOSTNAME in env variable list")
+        if not hostname:
+            raise ValueError("Define HOSTNAME in env variable list")
         port = os.environ.get("PORT")
-        # if not port:
-        #     raise ValueError("Define PORT in env variable list")
+        if not port:
+            raise ValueError("Define PORT in env variable list")
         username = os.environ.get("USERNAME")
-        # if not username:
-        #     raise ValueError("Define USERNAME in env variable list")
+        if not username:
+            raise ValueError("Define USERNAME in env variable list")
         password = os.environ.get("PASSWORD")
-        # if not password:
-        #     raise ValueError("Define PASSWORD in env variable list")
+        if not password:
+            raise ValueError("Define PASSWORD in env variable list")
 
         # Defined initialisation parameters
         self.client = None
