@@ -9,6 +9,7 @@ For the moment this is a terminal application
 """
 import os
 import paramiko
+from paramiko.ssh_exception import NoValidConnectionsError
 
 class SSHHandler:
 
@@ -40,13 +41,16 @@ class SSHHandler:
         """_client wraps the .connect()"""
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(
-            hostname=self.hostname,
-            port=self.port,
-            username=self.username,
-            password=self.password
-        )
-        self.client = client
+        try:
+            client.connect(
+                hostname=self.hostname,
+                port=self.port,
+                username=self.username,
+                password=self.password
+            )
+            self.client = client
+        except NoValidConnectionsError as ex:
+            raise Exception("Host not available")
 
     def _exec(self, command) -> object:
         """"""

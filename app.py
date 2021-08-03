@@ -2,32 +2,6 @@
 import env
 from ssh import SSHHandler
 
-# Installed
-from flask import Flask
-from flask import render_template
-import os
-import json
-import time
-import multiprocessing as mp
-
-# app = Flask(__name__)
-
-# ###########################################################
-# # ROUTES
-# ###########################################################
-
-# @app.route("/", methods=["GET"])
-# def index():
-#     contents = {
-#         "page_title": "Application Settings Page",
-#     }
-#     return render_template('index.html', contents=contents)
-
-
-
-###########################################################
-# SSH APP & __main__
-###########################################################
 
 def ssh_app(project_root):
     # SSH handler
