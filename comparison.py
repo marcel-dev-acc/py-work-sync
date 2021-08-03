@@ -10,10 +10,10 @@ def comparison():
         remote_contents = json.loads(file.read())
 
     if local_contents == remote_contents:
-        return "Matched"
+        return True  # "Matched"
     else:
-        return "Not matched"
+        return False  # "Not matched"
 
 if __name__ == "__main__":
-    result = comparison()
-    print(result)
+    matched = comparison()
+    print(matched)
