@@ -63,7 +63,7 @@ class SSHHandler:
             "stderr": stderr.readlines() if stderr.readable() else None,
         }
 
-    def _get_file(self, src, dest):
+    def _get_file(self, src, dest) -> None:
         """
             _get_file wraps the open_sftp() and .get() methods for file
             transmission between a remote host and a local host.
@@ -84,8 +84,9 @@ class SSHHandler:
         ftp_client = self.client.open_sftp()
         ftp_client.get(src, dest)
         ftp_client.close()
+        return None
 
-    def _put_file(self, src, dest):
+    def _put_file(self, src, dest) -> None:
         """
             _put_file wraps the open_sftp() and .get() methods for file
             transmission between a local host and a remote host.
@@ -105,6 +106,8 @@ class SSHHandler:
         # TODO Validate if path exists
         ftp_client = self.client.open_sftp()
         ftp_client.put(src, dest)
+        ftp_client.close()
+        return None
 
 if __name__ == "__main__":
 
