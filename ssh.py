@@ -109,6 +109,15 @@ class SSHHandler:
         ftp_client.close()
         return None
 
+    def _open(self, dest, filename, contents, mode = "w") -> None:
+        ftp_client = self.client.open_sftp()
+        ftp_client.chdir(dest)
+        with ftp_client.open(filename, mode) as file:
+            file.write(contents)
+        ftp_client.close()
+        return None
+
+
 if __name__ == "__main__":
 
     print("Starting application...")

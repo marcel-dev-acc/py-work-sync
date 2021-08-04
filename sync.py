@@ -19,26 +19,28 @@ def loop_validation(
         # Skip all informational fields
         if _item in ["type", "size"]:
             continue
-        
+        remote_value = target_contents
+        if remote_value:
+            for lookup in arch_head_list:
+                remote_value = remote_value.get(lookup)
         if contents[_item]["type"] == "folder":
             # This is a folder
 
             # Validate folder exists on remote
-            remote_value = target_contents
-            for lookup in arch_head_list:
-                remote_value = remote_value.get(lookup)
-            if _item not in remote_value:
+            if not remote_value or _item not in remote_value:
                 print("Item {} not in folder".format(_item))
                 # Create folder as it does not exist on remote host
                 ss._exec(
-                    "mkdir -p {}{}".format(
+                    "mkdir -p {}{}/{}".format(
                         os.environ["REMOTE_HOST_FOLDER"],
-                        arch_head
+                        arch_head,
+                        _item
                     )
                 )
 
             # Check sub folders recursively as defined by local host
             loop_validation(
+                handler=ss,
                 head="{}/{}".format(arch_head, _item),
                 contents=contents[_item],
                 target_contents=target_contents
@@ -47,28 +49,26 @@ def loop_validation(
             # This is a file
 
             # Validate file exists on remote
-            remote_value = target_contents
-            for lookup in arch_head_list:
-                remote_value = remote_value.get(lookup)
-            if _item not in remote_value:
+            if  not remote_value or _item not in remote_value:
                 print("Item {} not in folder".format(_item))
                 # Copy file as it does not exist on remote host
                 local_sub_path = "{}{}".format("\\", "\\")
                 for _folder in arch_head_list:
                     local_sub_path = local_sub_path + _folder + "{}{}".format("\\", "\\")
-                ss._put_file(
-                    src="{}{}".format(
-                        os.environ["LOCAL_HOST_FOLDER"],
-                        local_sub_path,
-                        _item
-                    ),
+                local_file_path = "{}{}{}".format(
+                    os.environ["LOCAL_HOST_FOLDER"],
+                    local_sub_path,
+                    _item
+                )
+                with open(local_file_path, "r") as file:
+                    file_contents = file.read()
+                ss._open(
                     dest="{}{}".format(
                         os.environ["REMOTE_HOST_FOLDER"],
-                        arch_head,
-                        "/{}".format(
-                            _item
-                        )
-                    )
+                        arch_head
+                    ),
+                    filename=_item,
+                    contents=file_contents
                 )
 
     return None
